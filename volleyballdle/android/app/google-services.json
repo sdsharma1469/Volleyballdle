@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "1093773589964",
+    "project_id": "volleyballdle",
+    "storage_bucket": "volleyballdle.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093773589964:android:007f7ea02dbc373724b169",
+        "android_client_info": {
+          "package_name": "com.shaunak.volleyballdle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1093773589964-3kq2ooaqhob1slqo5nk2lpgpb5aci1r7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCJ7UIMyFzy97n3lrz8dhz6B3eX26e2H8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1093773589964-3kq2ooaqhob1slqo5nk2lpgpb5aci1r7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1093773589964-h2o165koi3ho0skq5hrhr9f3dkfb054c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.volleyballdle"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093773589964:android:78c66794173e319524b169",
+        "android_client_info": {
+          "package_name": "volleyballdle.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1093773589964-3kq2ooaqhob1slqo5nk2lpgpb5aci1r7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCJ7UIMyFzy97n3lrz8dhz6B3eX26e2H8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1093773589964-3kq2ooaqhob1slqo5nk2lpgpb5aci1r7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1093773589964-h2o165koi3ho0skq5hrhr9f3dkfb054c.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.volleyballdle"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
