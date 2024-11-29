@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'database/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'database/fetch_requests.dart';
+import 'database/questions/fetch_requests.dart';
 import 'authpage.dart';
 import 'welcomepage.dart';
 

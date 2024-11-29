@@ -7,7 +7,7 @@ Future<void> fetchData() async {
   try {
     QuerySnapshot snapshot = await _firestore.collection('Players').get();
     for (var doc in snapshot.docs) {
-      print(doc.data());  // Print document data
+      //print(doc.data());  // Print document data
     }
   } catch (e) {
     print("Error fetching data: $e");
