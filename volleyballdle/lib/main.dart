@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'database/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'frontend/authpage.dart';
-import 'frontend/welcomepage.dart';
-import 'database/questions/fetch_questions.dart';
-import 'backend/player.dart';
+import 'frontend/pages/authpage.dart';
+import 'frontend/pages/welcomepage.dart';
 import 'database/questions/populatedb.dart';
 
 void main() async
@@ -12,8 +10,6 @@ void main() async
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
   populateDB();
-  Player? todaysPlayer = await fetchTodaysPlayer();
-  if(todaysPlayer!=null) { todaysPlayer.printPlayerDetails();}
   runApp(MyApp());
 }
 

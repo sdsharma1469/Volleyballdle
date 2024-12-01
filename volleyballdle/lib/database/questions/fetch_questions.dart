@@ -6,8 +6,8 @@ Future<void> fetchData() async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     QuerySnapshot snapshot = await firestore.collection('Players').get();
     List<Player> players = snapshot.docs.map((doc) => Player.fromFirestore(doc)).toList();
-    for (var player in players) {
-      player.printPlayerDetails();
+    for(var player in players){
+      print(player.firstName);
     }
   } catch (e) {
     print('Error fetching player data: $e');
@@ -25,6 +25,7 @@ Future<Player?> fetchTodaysPlayer() async {
     for (var player in players) {
       if (player.date != null) {
         if (player.date!.isAfter(startOfDay) && player.date!.isBefore(endOfDay)) {
+          print('Fetched Player');
           return player; 
         }
       }

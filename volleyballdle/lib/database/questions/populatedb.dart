@@ -6,8 +6,12 @@ Future<void> populateDB() async {
   final String response = await rootBundle.loadString('players.json');
   final List<dynamic> players = json.decode(response);
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   for (var player in players) {
     try {
+      if (player['date'] != null && player['date'] is String) {
+        player['date'] = Timestamp.fromDate(DateTime.parse(player['date'])); 
+      }
       QuerySnapshot querySnapshot = await firestore
           .collection('Players')
           .where('nationality', isEqualTo: player['nationality'])
@@ -17,15 +21,13 @@ Future<void> populateDB() async {
       if (querySnapshot.docs.isNotEmpty) {
         for (var doc in querySnapshot.docs) {
           await firestore.collection('Players').doc(doc.id).set(player);
-          print("Player updated: ${player['firstName']} ${player['lastName']}");
         }
       } else {
         await firestore.collection('Players').add(player);
-        print("Player added: ${player['firstName']} ${player['lastName']}");
       }
     } catch (e) {
       print("Failed to process player: ${player['firstName']} ${player['lastName']}. Error: $e");
     }
   }
-  print("All players processed successfully!");
+  print("database populated");
 }
