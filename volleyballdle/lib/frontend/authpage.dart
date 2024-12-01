@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'welcomepage.dart';
-import 'backend/user.dart';
+import '../backend/user.dart';
 
 class AuthPage extends StatefulWidget {
   @override

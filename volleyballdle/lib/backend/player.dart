@@ -1,60 +1,48 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Player {
-  // Define the properties of the Player class
   String currentLeague;
-  int height;
-  String lastName;
   String nationality;
   String firstName;
   int age;
+  String lastName;
+  int height;
+  DateTime? date; // Field to store the date
 
   // Constructor to initialize the Player object
   Player({
     required this.currentLeague,
-    required this.height,
-    required this.lastName,
     required this.nationality,
     required this.firstName,
     required this.age,
+    required this.lastName,
+    required this.height,
+    this.date,
   });
 
-  // Convert a Player object to a map that can be stored in Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'Current_League': currentLeague,
-      'Height': height,
-      'Last_Name': lastName,
-      'Nationality': nationality,
-      'First_Name': firstName,
-      'Age': age,
-    };
-  }
-
-  // Create a Player object from a Firestore document snapshot
+  // Factory constructor to create a Player from Firestore document data
   factory Player.fromFirestore(DocumentSnapshot doc) {
-    Map data = doc.data() as Map;
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
     return Player(
-      currentLeague: data['Current_League'],
-      height: data['Height'],
-      lastName: data['Last_Name'],
-      nationality: data['Nationality'],
-      firstName: data['First_Name'],
-      age: data['Age'],
+      currentLeague: data['Current_League'] ?? '',
+      nationality: data['Nationality'] ?? '',
+      firstName: data['First_Name'] ?? '',
+      age: data['Age'] ?? 0,
+      lastName: data['Last_Name'] ?? '',
+      height: data['Height'] ?? 0,
+      date: data['Date']?.toDate(),  // Assuming 'Date' is a Timestamp in Firestore
     );
   }
-
-  // Save the Player object to Firestore
-  Future<void> saveToFirestore() async {
-    CollectionReference players = FirebaseFirestore.instance.collection('players');
-    await players.add(toMap());
-  }
-
-  // Fetch all players from Firestore
-  static Future<List<Player>> fetchPlayers() async {
-    CollectionReference players = FirebaseFirestore.instance.collection('players');
-    QuerySnapshot querySnapshot = await players.get();
-    List<Player> playerList = querySnapshot.docs.map((doc) => Player.fromFirestore(doc)).toList();
-    return playerList;
+  
+  // Method to display player details
+  void printPlayerDetails() {
+    print('Player Details:');
+    print('Full Name: $firstName $lastName');
+    print('League: $currentLeague');
+    print('Nationality: $nationality');
+    print('Age: $age');
+    print('Height: $height cm');
+    print('Date: $date');
   }
 }
