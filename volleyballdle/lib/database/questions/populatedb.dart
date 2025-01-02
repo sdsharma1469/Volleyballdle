@@ -29,5 +29,5 @@ Future<void> populateDB() async {
       print("Failed to process player: ${player['firstName']} ${player['lastName']}. Error: $e");
     }
   }
-  print("database populated");
+ // print("database populated");
 }

@@ -80,6 +80,7 @@ class _AuthPageState extends State<AuthPage> {
           lastQuestionCompleted: null,
         );
         await newUser.createUser();
+        print("Checking it, should be null: ${newUser.lastQuestionCompleted}");
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => WelcomePage()),

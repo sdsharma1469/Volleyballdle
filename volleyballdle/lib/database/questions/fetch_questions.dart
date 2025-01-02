@@ -25,7 +25,7 @@ Future<Player?> fetchTodaysPlayer() async {
     for (var player in players) {
       if (player.date != null) {
         if (player.date!.isAfter(startOfDay) && player.date!.isBefore(endOfDay)) {
-          print('Fetched Player');
+          //print('Fetched Player');
           return player; 
         }
       }

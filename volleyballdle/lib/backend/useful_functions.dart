@@ -11,7 +11,7 @@ class UsefulFunctions {
     return await fetchTodaysPlayer();
   }
 
-  Future<String> getUsername() async {
+  Future<String> getEmail() async {
     User? user = _auth.currentUser;
     if (user != null) {
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
@@ -24,6 +24,60 @@ class UsefulFunctions {
     }
     return 'Guest';
   }
+
+  Future<String?> getTodaysQuestionID() async {
+    try {
+      DateTime today = DateTime.now();
+      DateTime startOfDay = DateTime(today.year, today.month, today.day); // Start of the day (00:00:00)
+      DateTime endOfDay = startOfDay.add(Duration(days: 1)).subtract(Duration(milliseconds: 1)); // End of the day (23:59:59)
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+      QuerySnapshot snapshot = await firestore.collection('Players').get();
+      List<Player> players = snapshot.docs.map((doc) => Player.fromFirestore(doc)).toList();
+
+      for (var player in players) {
+        if (player.date != null) {
+          if (player.date!.isAfter(startOfDay) && player.date!.isBefore(endOfDay)) {
+            return snapshot.docs.firstWhere((doc) => doc.id == player.id).id; // Return the ID of the matching player
+          }
+        }
+      }
+    } catch (e) {
+      print('Error fetching player data: $e'); // Retain error print
+    }
+    return null; // Return null if no player matches today's date
+  }
+
+ Future<UserModel?> getUser() async {
+  User? firebaseUser = _auth.currentUser; // Get the current Firebase user
+  if (firebaseUser == null) {
+    return null; // Return null if no user is logged in
+  }
+  try {
+    // Fetch additional user data from Firestore
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('Users')
+        .doc(firebaseUser.email)
+        .get();
+
+    if (userDoc.exists) {
+      var data = userDoc.data() as Map<String, dynamic>;
+      return UserModel(
+        email: data['email'],
+        lastLogin: data['lastLogin']?.toDate(),
+        lastQuestionCompleted: data['lastQuestionCompleted'],
+        completedQuestions: List<String>.from(data['completedQuestions'] ?? []),
+        streak: data['streak'] ?? 0, // Safely handle streak
+      );
+    } else {
+      // If no Firestore document exists, create a default UserModel
+      return UserModel(email: firebaseUser.email, completedQuestions: []);
+    }
+  } catch (e) {
+    print("Error fetching user data: $e");
+    return null;
+  }
+}
+
 
   Future<void> completeQuestion(String questionId) async {
     User? user = _auth.currentUser;
@@ -42,14 +96,13 @@ class UsefulFunctions {
     if (querySnapshot.docs.isNotEmpty) {
       return Player.fromFirestore(querySnapshot.docs.first);
     }
-    return null; 
+    return null;
   }
-
 
   void checkAnswer(
     Player? player,
-    String firstName,
-    String lastName,
+    String? firstName,
+    String? lastName,
     Function(String message, bool isCorrect) onResult,
   ) {
     // Format the strings to lower case and remove spaces
@@ -59,8 +112,6 @@ class UsefulFunctions {
     if (player != null) {
       String formattedPlayerFirstName = formatString(player.firstName);
       String formattedPlayerLastName = formatString(player.lastName);
-
-      // Check if the formatted names match
       if (formattedPlayerFirstName == formattedFirstName &&
           formattedPlayerLastName == formattedLastName) {
         onResult('Yay! The player is ${player.firstName} ${player.lastName}.', true);
@@ -69,7 +120,6 @@ class UsefulFunctions {
         onResult('Incorrect, try again.', false);
       }
     } else {
-      print("Player is null. UGH!");
       onResult('Incorrect, try again.', false);
     }
   }
@@ -82,9 +132,60 @@ class UsefulFunctions {
     }
   }
 
-
-  String formatString(String s1) {
+  String formatString(String? s1) {
     // Convert string to lowercase and remove spaces
+    if (s1 == null) return '';
     return s1.toLowerCase().replaceAll(' ', '');
+  }
+
+  Map<String, String> comparePlayers(Player actualPlayer, Player guessedPlayer) {
+    Map<String, String> comparisonResults = {};
+
+    if (actualPlayer.firstName.toLowerCase() == guessedPlayer.firstName.toLowerCase()) {
+      comparisonResults['First Name'] = 'Correct';
+    } else {
+      comparisonResults['First Name'] = 'Wrong';
+    }
+
+    // Compare last name
+    if (actualPlayer.lastName.toLowerCase() == guessedPlayer.lastName.toLowerCase()) {
+      comparisonResults['Last Name'] = 'Correct';
+    } else {
+      comparisonResults['Last Name'] = 'Wrong';
+    }
+
+    // Compare nationality
+    if (actualPlayer.nationality.toLowerCase() == guessedPlayer.nationality.toLowerCase()) {
+      comparisonResults['Nationality'] = 'Correct';
+    } else {
+      comparisonResults['Nationality'] = 'Wrong';
+    }
+
+    // Compare age
+    if (actualPlayer.age == guessedPlayer.age) {
+      comparisonResults['Age'] = 'Correct';
+    } else if (actualPlayer.age > guessedPlayer.age) {
+      comparisonResults['Age'] = 'Higher';
+    } else {
+      comparisonResults['Age'] = 'Lower';
+    }
+
+    // Compare height
+    if (actualPlayer.height == guessedPlayer.height) {
+      comparisonResults['Height'] = 'Correct';
+    } else if (actualPlayer.height > guessedPlayer.height) {
+      comparisonResults['Height'] = 'Higher';
+    } else {
+      comparisonResults['Height'] = 'Lower';
+    }
+
+    // Compare position
+    if (actualPlayer.position.toLowerCase() == guessedPlayer.position.toLowerCase()) {
+      comparisonResults['Position'] = 'Correct';
+    } else {
+      comparisonResults['Position'] = 'Wrong';
+    }
+
+    return comparisonResults;
   }
 }
